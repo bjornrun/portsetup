@@ -3,33 +3,37 @@ portsetup
 
 Provides and manage free local ports to be used in connecting to a specific remote port over proxy. This is custom made to be used with  TunnelSetup, TAPmanager and tapdaemon
 
-USAGE:
+**USAGE:**
 
 Change portsetup.cfg to correct data. If not user is not set, it will use UNIX account name.
-The port used will probably be dynamic. Add -p before -e parameter.
+*The port used will probably be dynamic. Add -p before -e parameter.*
 
-Allocate TAP / IP:
+**Allocate TAP / IP:**
 
 portsetup -e allocate    
-(To see all data allocated: portsetup -v -e allocate   )
+*(To see all data allocated: portsetup -v -e allocate   )*
 
-Get IP address:
+**Get IP address:**
 
 portsetup -e ip
 
-Example:
-IP=`portsetup -p $MANAGER_PORT -e ip`
+*Example:*
+<pre>
+IP=\`portsetup -p $MANAGER_PORT -e ip\`
 echo $IP
+</pre>
 
-Get Port:
+**Get Port:**
 
 portsetup -e port
 
-Example:
-PORT=`portsetup -p $MANAGER_PORT -e port`
+*Example:*
+<pre>
+PORT=\`portsetup -p $MANAGER_PORT -e port\`
 echo $PORT
+</pre>
 
-Remove TAP allocation
+**Remove TAP allocation**
 
 portsetup -p $MANAGER_PORT -e remove
 
