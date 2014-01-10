@@ -19,7 +19,7 @@ portsetup -e ip
 
 *Example:*
 <pre>
-IP=\`portsetup -p $MANAGER_PORT -e ip\`
+IP=`portsetup -p $MANAGER_PORT -e ip`
 echo $IP
 </pre>
 
@@ -29,7 +29,7 @@ portsetup -e port
 
 *Example:*
 <pre>
-PORT=\`portsetup -p $MANAGER_PORT -e port\`
+PORT=`portsetup -p $MANAGER_PORT -e port`
 echo $PORT
 </pre>
 
