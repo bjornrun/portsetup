@@ -4,10 +4,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-//	"io"
+	"io"
 	"io/ioutil"
 	"log"
-//	"strings"
+	"strings"
 	"net/http"
 	"flag"
 	"github.com/stvp/go-toml-config"
@@ -43,11 +43,22 @@ var Usage = func() {
 	fmt.Fprintf(os.Stderr, "\nConfig file:\naddress = <address to TAPmanager. Default: localhost>\nuser = <user signum. Mandatory>\ninstance = <which user's sim instance. Default:0>\n")
 }
 
+func CToGoString(c []byte) string {
+    n := -1
+    for i, b := range c {
+        if b == 0 {
+            break
+        }
+        n = i
+    }
+    return string(c[:n+1])
+}
+
 func main() {
 	flag.StringVar(&cfgFile, "c", "portsetup.cfg", "portsetup config file")
 	flag.BoolVar(&verbose,"v", false, "Verbose")
 	flag.IntVar(port, "p", 0, "Port (MANDATORY)")
-	flag.StringVar(&command, "e", "help", "Execute command (NOTE: must be last parameter): \n help\n allocate\n remove\n ip\n port\n ")
+	flag.StringVar(&command, "e", "help", "Execute command (NOTE: must be last parameter): \n help\n allocate\n remove\n ip\n port\n list\n")
 
 	
 	flag.Usage = Usage
@@ -198,6 +209,31 @@ func main() {
 		{
 			os.Exit(1)
 		}
+	} else
+	if command == "list" {
+		sendstr := fmt.Sprintf("http://%s:%d/list",*address,*port)
+//		fmt.Println(sendstr)
+		resp, err := http.Get(sendstr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var data TAPinfo
+		
+		dec := json.NewDecoder(strings.NewReader(CToGoString(body)))
+		for {
+			if err := dec.Decode(&data); err == io.EOF {
+				break
+			} else if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("Ip:%s Name:%s port:%d Reason:%s Status:%s tap:%s\n",data.Ip, data.Name, data.Port, data.Reason, data.Status, data.Tap)					
+		}
+		
 	} else
 	{
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", command)
