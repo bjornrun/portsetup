@@ -112,6 +112,7 @@ func main() {
 			os.Exit(0)
 		} else
 		{
+      fmt.Printf("Error in allocate");
 			os.Exit(1)
 		}
 	} else
